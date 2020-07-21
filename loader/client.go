@@ -10,7 +10,7 @@ import (
 
 	"golang.org/x/net/http2"
 	"time"
-	"github.com/rpasche/go-wrk/util@skip_verify"
+	"github.com/rpasche/go-wrk/util"
 )
 
 func client(disableCompression bool, disableKeepAlive bool, timeoutms int, allowRedirects bool, clientCert, clientKey, caCert string, skipVerify bool, usehttp2 bool) (*http.Client, error) {

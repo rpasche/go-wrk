@@ -10,8 +10,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/rpasche/go-wrk/loader@skip_verify"
-	"github.com/rpasche/go-wrk/util@skip_verify"
+	"github.com/rpasche/go-wrk/loader"
+	"github.com/rpasche/go-wrk/util"
 )
 
 const APP_VERSION = "0.1"

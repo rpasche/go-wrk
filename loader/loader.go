@@ -12,7 +12,7 @@ import (
 	"sync/atomic"
 	"time"
 
-	"github.com/rpasche/go-wrk/util@skip_verify"
+	"github.com/rpasche/go-wrk/util"
 )
 
 const (
