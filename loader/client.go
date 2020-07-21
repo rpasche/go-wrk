@@ -10,10 +10,10 @@ import (
 
 	"golang.org/x/net/http2"
 	"time"
-	"github.com/tsliwowicz/go-wrk/util"
+	"github.com/rpasche/go-wrk/util@skip_verify"
 )
 
-func client(disableCompression bool, disableKeepAlive bool, timeoutms int, allowRedirects bool, clientCert, clientKey, caCert string, usehttp2 bool) (*http.Client, error) {
+func client(disableCompression bool, disableKeepAlive bool, timeoutms int, allowRedirects bool, clientCert, clientKey, caCert string, skipVerify bool, usehttp2 bool) (*http.Client, error) {
 
 	client := &http.Client{}
 	//overriding the default parameters
@@ -56,8 +56,9 @@ func client(disableCompression bool, disableKeepAlive bool, timeoutms int, allow
 	clientCertPool.AppendCertsFromPEM(clientCACert)
 
 	tlsConfig := &tls.Config{
-		Certificates: []tls.Certificate{cert},
-		RootCAs:      clientCertPool,
+		Certificates:       []tls.Certificate{cert},
+		RootCAs:            clientCertPool,
+		InsecureSkipVerify: skipVerify,
 	}
 
 	tlsConfig.BuildNameToCertificate()

@@ -10,8 +10,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/tsliwowicz/go-wrk/loader"
-	"github.com/tsliwowicz/go-wrk/util"
+	"github.com/rpasche/go-wrk/loader@skip_verify"
+	"github.com/rpasche/go-wrk/util@skip_verify"
 )
 
 const APP_VERSION = "0.1"
@@ -36,6 +36,7 @@ var reqBody string
 var clientCert string
 var clientKey string
 var caCert string
+var skipVerify bool
 var http2 bool
 
 func init() {
@@ -55,6 +56,7 @@ func init() {
 	flag.StringVar(&clientCert, "cert", "", "CA certificate file to verify peer against (SSL/TLS)")
 	flag.StringVar(&clientKey, "key", "", "Private key file name (SSL/TLS")
 	flag.StringVar(&caCert, "ca", "", "CA file to verify peer against (SSL/TLS)")
+	flag.BoolVar(&skipVerify, "skip", false, "deactivate default SSL/TLS certificate verification. Only do this if you trust remote")
 	flag.BoolVar(&http2, "http", true, "Use HTTP/2")
 }
 
@@ -124,7 +126,7 @@ func main() {
 	}
 
 	loadGen := loader.NewLoadCfg(duration, goroutines, testUrl, reqBody, method, host, header, statsAggregator, timeoutms,
-		allowRedirectsFlag, disableCompression, disableKeepAlive, clientCert, clientKey, caCert, http2)
+		allowRedirectsFlag, disableCompression, disableKeepAlive, clientCert, clientKey, caCert, skipVerify, http2)
 
 	for i := 0; i < goroutines; i++ {
 		go loadGen.RunSingleLoadSession()
