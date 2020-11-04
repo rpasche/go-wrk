@@ -185,6 +185,8 @@ func (cfg *LoadCfg) RunSingleLoadSession(threadnum int, sequence bool) {
 			// Prefix the payload with the threadnumber and a sequence string
 			_reqBody = fmt.Sprintf("Thread: %d, Eventnum: %d | %s", threadnum, cnt, cfg.reqBody)
 			cnt+=1
+		} else {
+			_reqBody = cfg.reqBody
 		}
 		respSize, reqDur := DoRequest(httpClient, cfg.header, cfg.method, cfg.host, cfg.testUrl, _reqBody)
 
