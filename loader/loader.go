@@ -169,7 +169,7 @@ func DoRequest(httpClient *http.Client, header map[string]string, method, host, 
 
 //Requester a go function for repeatedly making requests and aggregating statistics as long as required
 //When it is done, it sends the results using the statsAggregator channel
-func (cfg *LoadCfg) RunSingleLoadSession() {
+func (cfg *LoadCfg) RunSingleLoadSession(threadnum int, sequence bool) {
 	stats := &RequesterStats{MinRequestTime: time.Minute}
 	start := time.Now()
 
@@ -178,8 +178,16 @@ func (cfg *LoadCfg) RunSingleLoadSession() {
 		log.Fatal(err)
 	}
 
+	cnt := 1
+	_reqBody := ""
 	for time.Since(start).Seconds() <= float64(cfg.duration) && atomic.LoadInt32(&cfg.interrupted) == 0 {
-		respSize, reqDur := DoRequest(httpClient, cfg.header, cfg.method, cfg.host, cfg.testUrl, cfg.reqBody)
+		if sequence {
+			// Prefix the payload with the threadnumber and a sequence string
+			_reqBody = fmt.Sprintf("Thread: %d, Eventnum: %d | %s", threadnum, cnt, cfg.reqBody)
+			cnt+=1
+		}
+		respSize, reqDur := DoRequest(httpClient, cfg.header, cfg.method, cfg.host, cfg.testUrl, _reqBody)
+
 		if respSize > 0 {
 			stats.TotRespSize += int64(respSize)
 			stats.TotDuration += reqDur

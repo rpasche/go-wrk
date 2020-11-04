@@ -37,6 +37,7 @@ var clientCert string
 var clientKey string
 var caCert string
 var skipVerify bool
+var sequence bool
 var http2 bool
 
 func init() {
@@ -57,6 +58,7 @@ func init() {
 	flag.StringVar(&clientKey, "key", "", "Private key file name (SSL/TLS")
 	flag.StringVar(&caCert, "ca", "", "CA file to verify peer against (SSL/TLS)")
 	flag.BoolVar(&skipVerify, "skip", false, "deactivate default SSL/TLS certificate verification. Only do this if you trust remote")
+	flag.BoolVar(&sequence, "sequence", false, "modify the body to get unique payload by adding the client number and a sequence number")
 	flag.BoolVar(&http2, "http", true, "Use HTTP/2")
 }
 
@@ -129,7 +131,7 @@ func main() {
 		allowRedirectsFlag, disableCompression, disableKeepAlive, clientCert, clientKey, caCert, skipVerify, http2)
 
 	for i := 0; i < goroutines; i++ {
-		go loadGen.RunSingleLoadSession()
+		go loadGen.RunSingleLoadSession(i+1, sequence)
 	}
 
 	responders := 0
